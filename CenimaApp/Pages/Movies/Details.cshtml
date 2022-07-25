@@ -1,0 +1,187 @@
+﻿@page
+@model CenimaApp.Pages.Movies.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<div>
+
+    <a asp-page="./List">Back to List</a>
+</div>
+<div>
+    <h4>Movie</h4>
+    <hr />
+    @{
+        TempData["movieId"] = @Model.Movie.MovieId;
+    }
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Movie.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Movie.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Movie.Image)
+        </dt>
+        <dd class="col-sm-10">
+            <img class="img-mm" src="@Model.Movie.Image" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Movie.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Movie.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Movie.Year)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Movie.Year)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Movie.Genre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Movie.Genre.Description)
+        </dd>
+    </dl>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h1>Tổng rate</h1>
+
+            <canvas id="Chart1" width="500" height="300"></canvas>
+        </div>
+        <div class="col-sm">
+            <h1>Chi tiết rate</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Full Name
+                        </th>
+                        <th>
+                            Comment
+                        </th>
+                        <th>
+                            Rate
+                        </th>
+                        <th>
+                            Time
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Rates)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Person.Fullname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Comment)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumericRating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Time)
+                            </td>
+                           
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts
+    {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+
+            $.ajax({
+                type: "Get",
+                url: "/Movies/Details/?handler=RevenueData",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    console.log(response.rate);
+                    //console.log(response.revenue.length);
+                    var data = response.rate;
+                    //  var data2 = response.expense;
+                    var labels = response.start;
+                    var color1 = [];
+                    var color2 = [];
+                    for (var i = 0; i < response.start.length; i++) {
+                        color1.push("rgba(255, 99, 132, 1)");
+                        color2.push("rgba(54, 162, 235, 0.2)");
+                    }
+
+                    var ctx = document.getElementById("Chart1");
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Rate',
+                                data: data,
+                                backgroundColor: color1,
+                            }]
+                        },
+                        options: {
+                            responsive: false,
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        maxRotation: 90,
+                                        minRotation: 80
+                                    },
+                                    gridLines: {
+                                        offsetGridLines: true
+                                    }
+                                },
+                                {
+                                    position: "top",
+                                    ticks: {
+                                        maxRotation: 90,
+                                        minRotation: 80
+                                    },
+                                    gridLines: {
+                                        offsetGridLines: true
+                                    }
+                                }],
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+
+                },
+                error: function(response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+    </script>
+}

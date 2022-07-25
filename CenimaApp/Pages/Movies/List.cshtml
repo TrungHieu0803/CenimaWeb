@@ -1,0 +1,75 @@
+﻿@page
+@model CenimaApp.Pages.Movies.ListModel
+@{
+}
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table" border="1">
+    <thead>s
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Description)
+            </th>
+            <th>
+                Genre
+            </th>
+            <th>
+                Rates
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Movies)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    <img class="img-mm" src="@item.Image" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.Description)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rates.Count)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.MovieId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.MovieId">Details</a> |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Movies.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Movies.HasNextPage ? "disabled" : "";
+}
+
+<div class="text-center mt-3">
+    <a asp-page="./Movies/Index"
+       asp-route-pageIndex="@(Model.Movies.PageIndex - 1)"
+       class="btn btn-primary @prevDisabled">
+        Previous page
+    </a>
+    <a asp-page="./Moives/Index"
+       asp-route-pageIndex="@(Model.Movies.PageIndex + 1)"
+       class="btn btn-primary @nextDisabled">
+        Next page
+    </a>
+</div>

@@ -1,0 +1,165 @@
+﻿@page
+@using Models;
+@model CenimaApp.Pages.Movies.Detail.IndexModel
+@{
+}
+    @{
+        TempData["movieId"] = @Model.movie.MovieId;
+    }
+
+<main class="main-content">
+    <div class="container">
+        <div class="page">
+            <div class="breadcrumbs">
+                <span>@Model.movie.Title</span>
+            </div>
+
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <figure class="movie-poster"><img src="@Model.movie.Image" alt="#"></figure>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="movie-title">@Model.movie.Title</h2>
+                        <div class="movie-summary">
+                            <p>@Model.movie.Description</p>
+                        </div>
+                        <ul class="movie-meta">
+                            <li>
+                                <strong>Rating:</strong>
+                                <div class="star-rating"><span style="width:80%"><strong class="rating">@String.Format("{0:0.0}", Model.rate)</strong>/10</span></div>
+                            </li>
+                            <li><strong>Thể loại:</strong> @Model.movie.Genre.Description</li>
+                            <li><strong>Công chiếu:</strong> @Model.movie.Year (USA)</li>
+                        </ul>
+
+                        <ul class="starring">
+                            <li><strong>Directors:</strong> Kirk de Mico (as Kirk DeMico). Chris Sanders</li>
+                            <li><strong>Writers:</strong> Chris Sanders (screenplay), Kirk De Micco (screenplay)</li>
+                        </ul>
+                    </div>
+                </div> <!-- .row -->
+
+            </div>
+        </div>
+        @{
+            if (Model.person != null)
+            {
+                if (Model.personRate == null)
+                {
+
+                    <section style="background-color: #d94125;">
+                        <div class="container my-5 py-5 text-dark">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-10 col-lg-8 col-xl-6">
+                                    <div class="card">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex flex-start w-100">
+                                                <img class="rounded-circle shadow-1-strong me-3"
+                                             src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(21).webp" alt="avatar" width="65"
+                                             height="65" />
+                                                <form method="post">
+                                                    <div class="w-100">
+                                                        <h5>Add a comment</h5>
+                                                        <div class="form-outline">
+                                                            <textarea class="form-control" id="textAreaExample" asp-for="personRate.Comment" rows="4"></textarea>
+                                                            <span asp-validation-for="personRate.Comment" class="text-danger"></span>
+                                                            <label class="form-label" for="textAreaExample">What is your view?</label>
+                                                            <input asp-for="personRate.NumericRating" type="number" class="form-control"  min="1" max=""/>
+                                                             <span asp-validation-for="personRate.NumericRating" class="text-danger"></span>
+                                                             <input asp-for="personRate.PersonId" type="number" class="form-control" value="@Model.person.PersonId" hidden />
+                                                             <input asp-for="personRate.MovieId" type="number" class="form-control" value="@Model.movie.MovieId" hidden />
+                                                        </div>
+                                                        <div class="d-flex justify-content-between mt-3">
+                                                            <button type="submit" class="btn btn-danger">
+                                                                Rate <i class="fas fa-long-arrow-alt-right ms-1"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                }
+                else
+                {
+
+                    <section style="background-color: #d94125;">
+                        <div class="container my-5 py-5 text-dark">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-md-10 col-lg-8 col-xl-6">
+                                    <div class="card">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex flex-start w-100">
+                                                <img class="rounded-circle shadow-1-strong me-3"
+                                             src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(21).webp" alt="avatar" width="65"
+                                             height="65" />
+                                                <form method="post">
+                                                    <div class="w-100">
+                                                        <h5>Add a comment</h5>
+                                                        <div class="form-outline">
+                                                            <textarea class="form-control" id="textAreaExample" asp-for="personRate.Comment" rows="4">@Model.personRate.Comment</textarea>
+                                                            <span asp-validation-for="personRate.Comment" class="text-danger"></span>
+                                                            <label class="form-label" for="textAreaExample">What is your view?</label>
+                                                            <input asp-for="personRate.NumericRating" type="number" class="form-control" value="@Model.personRate.NumericRating" min="1" max="10"/>
+                                                             <span asp-validation-for="personRate.NumericRating" class="text-danger"></span>
+                                                            <input asp-for="personRate.PersonId" type="number" class="form-control" value="@Model.person.PersonId" hidden />
+                                                            <input asp-for="personRate.MovieId" type="number" class="form-control" value="@Model.movie.MovieId" hidden />
+
+                                                        </div>
+                                                        <div class="d-flex justify-content-between mt-3">
+                                                            <button type="submit" class="btn btn-danger">
+                                                                Update <i class="fas fa-long-arrow-alt-right ms-1"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                }
+            }
+        }
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                    <div class="card-body p-4" id="tablebody">
+
+                       @* @foreach (var rate in Model.movie.Rates)
+                        {
+                            Person p = new Models.CenimaDBContext().Persons.SingleOrDefault<Person>(c => c.PersonId == rate.PersonId);
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <p>@rate.Comment</p>
+
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp" alt="avatar" width="25"
+                                             height="25" />
+                                            <p class="small mb-0 ms-2">@p.Fullname</p>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center">
+
+                                            <p class="small text-muted mb-0">@rate.NumericRating</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }*@
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- .container -->
+</main>

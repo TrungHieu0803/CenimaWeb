@@ -1,0 +1,49 @@
+﻿@page
+@model CenimaApp.Pages.Movies.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Movies</h1>
+
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Search:
+            <input type="text" name="searchString" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </p>
+    </div>
+</form>
+<div class="row">
+    @foreach (var item in Model.Movies)
+    {
+        <div class="col-sm-6 col-md-3">
+            <div class="latest-movie">
+                <a asp-page="/Movies/Detail/Index" asp-route-id="@item.MovieId"><img src="@item.Image" alt="Movie 3"></a>
+                <p class="font-weight-bold text-black-50"> @Html.DisplayFor(modelItem => item.Title) -  @Html.DisplayFor(modelItem => item.Year)</p>
+            </div>
+        </div>
+    }
+</div>
+
+@{
+    var prevDisabled = !Model.Movies.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Movies.HasNextPage ? "disabled" : "";
+}
+
+<div class="text-center mt-3">
+    <form asp-page="./Index" method="get">
+         <input type="number" name="pageIndex" hidden value="@(Model.Movies.PageIndex -1)"/>
+            <input type="submit" value="Previous" class="btn btn-primary"  class="btn btn-primary @prevDisabled" />
+
+    </form>
+
+    <form asp-page="./Index" method="get">
+         <input type="number" name="pageIndex" hidden value="@(Model.Movies.PageIndex  + 1)"/>
+         <input type="submit" value="Next" class="btn btn-primary"  class="btn btn-primary @nextDisabled" />
+
+    </form>
+</div>
